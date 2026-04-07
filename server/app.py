@@ -14,6 +14,7 @@ import json
 import random
 import asyncio
 import logging
+import math
 from contextlib import asynccontextmanager
 from typing import Optional
 
@@ -77,6 +78,8 @@ class EpisodeState:
         self.unique_action_types: set[str] = set()
         self.rolling_summary: str = ""
         self.prev_health: float = 0.0
+        self.raw_cumulative: float = 0.0
+        self.squashed_cumulative: float = 0.0
 
     def reset(self, task_id: str, seed: int) -> None:
         self.active = True
@@ -87,6 +90,8 @@ class EpisodeState:
         self.history = []
         self.unique_action_types = set()
         self.rolling_summary = ""
+        self.raw_cumulative = 0.0
+        self.squashed_cumulative = 0.0
 
         primary_rng = random.Random(seed)
         network_seed = CONFIG.get("network_shim_seed", 99)
@@ -337,6 +342,23 @@ async def step(request: StepRequest) -> StepResult:
                 time_step_penalty=reward.breakdown.time_step_penalty,
             ),
         )
+
+    # =====================================================================
+    # --- PHASE 2 RL MATH FIX: CUMULATIVE SQUASHING ---
+    EPISODE.raw_cumulative += reward.value
+    # Squash the raw total into a strict (0, 1) curve
+    squashed_val = 1.0 / (1.0 + math.exp(-EPISODE.raw_cumulative / 5.0))
+    # Clamp to ensure it never hits exactly 0.0 or 1.0
+    new_squashed = max(0.001, min(0.999, squashed_val))
+    
+    # Send the delta for this specific step
+    step_delta = new_squashed - EPISODE.squashed_cumulative
+    EPISODE.squashed_cumulative = new_squashed
+    reward.value = round(step_delta, 6)
+
+    if done:
+        info["score"] = round(new_squashed, 6)
+    # =====================================================================
 
     signals = EPISODE.telemetry.get_golden_signals()
     alerts = EPISODE.telemetry.get_active_alerts()
