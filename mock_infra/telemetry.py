@@ -215,46 +215,22 @@ class MockTelemetry:
             for svc in ["api-gateway", "auth-service", "order-service", "db"]
         }
 
-        per_svc_latency = "\n".join(
-            f"  {svc}: {st['latency_ms']:.1f}ms" for svc, st in svc_status.items()
-        )
         per_svc_errors = "\n".join(
             f"  {svc}: {st['error_rate_pct']:.2f}%" for svc, st in svc_status.items()
         )
 
+        per_svc_latency = "\n".join(
+            f"  {svc}: {st['latency_ms']:.1f}ms" for svc, st in svc_status.items()
+        )
         METRIC_MAP = {
-            "latency_p99_ms": (
-                f"latency_p99_ms{{aggregated}} = {s['latency_p99_ms']} "
-                f"(window: {time_window})\nPer-service breakdown:\n{per_svc_latency}"
-            ),
-            "traffic_rps": (
-                f"http_requests_total{{rate}} = {s['traffic_rps']:.1f} req/s "
-                f"(window: {time_window})"
-            ),
-            "error_rate": (
-                f"http_5xx_rate{{aggregated}} = {s['error_rate_pct']:.2f}% "
-                f"(window: {time_window})\nBurn rate: {burn_rate_raw:.1f}× SLO budget\n"
-                f"Per-service breakdown:\n{per_svc_errors}"
-            ),
-            "saturation_pct": (
-                f"resource_saturation = {s['saturation_pct']:.1f}% "
-                f"(window: {time_window})"
-            ),
-            "connection_pool_used": (
-                f"pg_stat_activity_count = {db['pool_used']}/{db['pool_max']} "
-                f"({db['pool_pct']:.1f}%) (window: {time_window})\n"
-                + self._db.get_pg_stat_activity()
-            ),
-            "burn_rate": (
-                f"slo_burn_rate = {burn_rate_raw:.2f}× error budget "
-                f"(SLO: {SLO_AVAILABILITY_TARGET*100:.1f}%, "
-                f"budget: {SLO_ERROR_BUDGET*100:.2f}%) (window: {time_window})"
-            ),
+            "latency_p99_ms": f"latency_p99_ms{{aggregated}} = {s['latency_p99_ms']} (window: {time_window})\nPer-service breakdown:\n{per_svc_latency}",
+            "traffic_rps": f"http_requests_total{{rate}} = {s['traffic_rps']:.1f} req/s (window: {time_window})",
+            "error_rate": f"http_5xx_rate{{aggregated}} = {s['error_rate_pct']:.2f}% (window: {time_window})\nBurn rate: {burn_rate_raw:.1f}× SLO budget\nPer-service breakdown:\n{per_svc_errors}",
+            "saturation_pct": f"resource_saturation = {s['saturation_pct']:.1f}% (window: {time_window})",
+            "connection_pool_used": f"pg_stat_activity_count = {db['pool_used']}/{db['pool_max']} ({db['pool_pct']:.1f}%) (window: {time_window})\n{self._db.get_pg_stat_activity()}",
+            "burn_rate": f"slo_burn_rate = {burn_rate_raw:.2f}× error budget (SLO: {SLO_AVAILABILITY_TARGET * 100:.1f}%, budget: {SLO_ERROR_BUDGET * 100:.2f}%) (window: {time_window})",
             "cpu_usage": f"container_cpu_usage = 67.3% (window: {time_window})",
-            "memory_usage_pct": (
-                f"container_memory_usage / limit = {s['saturation_pct']:.1f}% "
-                f"(window: {time_window})"
-            ),
+            "memory_usage_pct": f"container_memory_usage / limit = {s['saturation_pct']:.1f}% (window: {time_window})",
             "pg_stat_activity": self._db.get_pg_stat_activity(),
         }
 

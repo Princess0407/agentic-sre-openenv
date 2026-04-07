@@ -73,19 +73,19 @@ $$H_t = w_1 A_t + w_2\left(\frac{1}{L_t}\right) - w_3 B_t$$
 
 | Task ID | Description | Difficulty | Expected Score |
 | :--- | :--- | :--- | :--- |
-| **`task_1`** | **Gateway Latency Triage:** A simple spike in upstream latency requiring log inspection and a localized restart. | Easy | `0.8` – `1.2` |
-| **`task_2`** | **OOMKilled Loop:** A memory leak causing progressive pod evictions. Requires scaling or rollback mitigation. | Medium | `0.5` – `0.9` |
-| **`task_3`** | **DB Pool Exhaustion:** A cascading failure locking the PostgreSQL schema. Highly penalizes incorrect restarts. | Hard | `0.1` – `0.6` |
-| **`task_4`** | **Telemetry Collapse:** A memory leak in `logging-fluentd-sidecar` evicts `prometheus-server`, causing all metric queries to fail. | Hard | `0.1` – `0.6` |
+| **`task_1`** | **Gateway Latency Triage:** A simple spike in upstream latency requiring log inspection and a localized restart. | Easy | `0.65` – `0.95` |
+| **`task_2`** | **OOMKilled Loop:** A memory leak causing progressive pod evictions. Requires scaling or rollback mitigation. | Medium | `0.40` – `0.75` |
+| **`task_3`** | **DB Pool Exhaustion:** A cascading failure locking the PostgreSQL schema. Highly penalizes incorrect restarts. | Hard | `0.15` – `0.50` |
+| **`task_4`** | **Telemetry Collapse:** A memory leak in `logging-fluentd-sidecar` evicts `prometheus-server`, causing all metric queries to fail. | Hard | `< 0.15` |
 
 ---
 
 ## 📊 Baseline Evaluation Scores
 Demonstrating the post-training environment validity on `task_1` (using the included baseline comparison script):
 
-* **Pretrained LLM (Vanilla Prompt):** `-0.5420` *(Failed to resolve, exhausted step limits)*
-* **SRE Expert (Few-Shot Prompt):** `+1.4130` *(Resolved optimally in 3 steps)*
-* **Training Delta:** `+1.9550` *(Proving meaningful, wide RL gradients are available)*
+* **Pretrained LLM (Vanilla Prompt):** `0.0841` *(Failed to resolve, exhausted step limits)*
+* **SRE Expert (Few-Shot Prompt):** `0.8725` *(Resolved optimally in 3 steps)*
+* **Training Delta:** `+0.7884` *(Proving meaningful, wide RL gradients are available)*
 
 ---
 
@@ -112,6 +112,7 @@ Demonstrating the post-training environment validity on `task_1` (using the incl
 ├── tasks/                      # Progressive incident scenarios
 └── knowledge_base/             # SRE runbooks ingested by the RAG system
 ```
+> 📖 For a deep dive into the RAG stack, Dual RNG, and FSM orchestration, check out our [System Architecture Documentation](docs/ARCHITECTURE.md).
 
 ---
 

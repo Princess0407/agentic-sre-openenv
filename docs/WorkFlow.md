@@ -1,0 +1,1 @@
+![alt text](<sre_incident_lifecycle_flowchart (1).png>)

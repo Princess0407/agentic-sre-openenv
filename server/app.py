@@ -298,8 +298,9 @@ async def step(request: StepRequest) -> StepResult:
         behavioral_penalty = task_2_mod.wrong_target_penalty(action_dict)
 
     elif EPISODE.task_id == "task_3" and EPISODE.stage_tracker:
-        newly_done = EPISODE.stage_tracker.update(action_dict, stdout, EPISODE.db)
-        if newly_done:
+        if newly_done := EPISODE.stage_tracker.update(
+            action_dict, stdout, EPISODE.db
+        ):
             milestone_hit = True
             milestone_value = EPISODE.stage_tracker.partial_score
             logger.info("Task 3 stages: %s", newly_done)
@@ -350,7 +351,7 @@ async def step(request: StepRequest) -> StepResult:
     squashed_val = 1.0 / (1.0 + math.exp(-EPISODE.raw_cumulative / 5.0))
     # Clamp to ensure it never hits exactly 0.0 or 1.0
     new_squashed = max(0.001, min(0.999, squashed_val))
-    
+
     # Send the delta for this specific step
     step_delta = new_squashed - EPISODE.squashed_cumulative
     EPISODE.squashed_cumulative = new_squashed
