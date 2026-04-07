@@ -258,7 +258,7 @@ class ResetRequest(BaseModel):
     )
 
     task_id: Literal["task_1", "task_2", "task_3", "task_4"] = Field(
-        ...,
+        default="task_1",  
         description=(
             "task_1=Diagnostic Triage (easy, 15 steps); "
             "task_2=OOMKilled Mitigation (medium, 25 steps); "
@@ -270,7 +270,6 @@ class ResetRequest(BaseModel):
         default=42,
         description="Primary episode seed for deterministic fault injection.",
     )
-
 
 class StepRequest(BaseModel):
     """Request body for POST /step."""

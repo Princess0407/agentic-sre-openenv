@@ -207,7 +207,7 @@ async def health_check():
 # POST /reset
 # ---------------------------------------------------------------------------
 @app.post("/reset", response_model=ObservationModel, tags=["OpenEnv"])
-async def reset(request: ResetRequest) -> ObservationModel:
+async def reset(request: ResetRequest= ResetRequest()) -> ObservationModel:
     """
     Initialise a pristine episode: reset infra, inject fault, return initial observation.
     Corresponds to OpenEnv reset().
