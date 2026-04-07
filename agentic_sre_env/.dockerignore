@@ -1,0 +1,10 @@
+# Never copy secrets or caches into the Docker image
+.env
+venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+*.md
+assets/faiss_index/

@@ -1,0 +1,25 @@
+spec_version: "1"
+name: "agentic_sre_env"
+type: "gym"
+tags:
+  - "openenv"
+runtime: "docker"
+app: "server.app:app"
+port: 8000
+
+# Hard step limits per task — enforced by step() which returns done=True
+# and reward=-1.0 when step_count >= max_steps[task_id].
+max_steps:
+  task_1: 15
+  task_2: 25
+  task_3: 40
+
+# Per-step wall-clock limit (seconds). Prevents the environment from
+# hanging indefinitely during costly diagnostic queries.
+step_timeout_seconds: 30
+
+# Dual-RNG Architecture seeds.
+# episode_seed drives deterministic fault injection (primary RNG).
+# network_shim_seed drives reproducible network jitter (secondary RNG).
+episode_seed: 42
+network_shim_seed: 99

@@ -1,0 +1,15 @@
+# Python environments
+venv/
+env/
+.venv/
+
+# Python caching
+__pycache__/
+*.pyc
+
+# Local env files
+.env
+
+# Build artifacts and compiled binaries
+assets/
+faiss_index/

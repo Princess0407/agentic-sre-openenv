@@ -1,0 +1,42 @@
+# ============================================================
+# Agentic SRE OpenEnv Environment — Pinned Dependencies
+# Python 3.11 | OpenEnv 0.1
+# Place this file inside agentic_sre_env/ alongside the Dockerfile.
+# ============================================================
+
+# PyTorch CPU-only index (must be declared here at the top)
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+# --- Web Server & OpenEnv Protocol ---
+fastapi==0.109.2
+uvicorn[standard]==0.27.1
+websockets==12.0
+python-multipart==0.0.9
+
+# --- Type-Safe Validation & Config ---
+pydantic==2.6.1
+pyyaml==6.0.1
+python-dotenv==1.0.1
+
+# --- RL Environment Interface ---
+gymnasium==0.29.1
+
+# --- Numerical Core ---
+# numpy MUST be <2.0 — faiss-cpu 1.7.x breaks with numpy 2.x
+numpy>=1.24.0,<2.0.0
+
+# --- Deep Learning Backend (CPU-only for lean Docker image) ---
+torch==2.2.1+cpu
+
+# --- Layout-Aware Hierarchical RAG ---
+sentence-transformers>=2.7.0,<4.0.0
+unstructured==0.12.4
+networkx==3.2.1
+faiss-cpu==1.7.4
+
+# --- Async HTTP & OpenAI (Baseline Evaluation Script) ---
+openai>=1.14.0
+httpx>=0.27.0
+
+# --- Deployment & Hub Integration ---
+huggingface-hub==0.20.3
