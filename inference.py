@@ -177,7 +177,7 @@ async def run_episode(
 
 async def main():
     # Run all 3 tasks — checklist requires 3+ tasks, each with a grader score
-    for task_id in ["task_1", "task_2", "task_3"]:
+    for task_id in ["task_1", "task_2", "task_3","task_4"]:
         await run_episode(model=MODEL_NAME, system_prompt=SRE_EXPERT_PROMPT, task_id=task_id)
 
 if __name__ == "__main__":

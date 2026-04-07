@@ -257,12 +257,13 @@ class ResetRequest(BaseModel):
         json_schema_extra={"example": {"task_id": "task_1", "seed": 42}}
     )
 
-    task_id: Literal["task_1", "task_2", "task_3"] = Field(
+    task_id: Literal["task_1", "task_2", "task_3", "task_4"] = Field(
         ...,
         description=(
             "task_1=Diagnostic Triage (easy, 15 steps); "
             "task_2=OOMKilled Mitigation (medium, 25 steps); "
-            "task_3=Cascading DB Failure (hard, 40 steps)."
+            "task_3=Cascading DB Failure (hard, 40 steps); "
+            "task_4=Blind SRE / Telemetry Collapse (extreme, 30 steps)."
         ),
     )
     seed: int = Field(

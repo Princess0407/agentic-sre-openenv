@@ -13,6 +13,7 @@ max_steps:
   task_1: 15
   task_2: 25
   task_3: 40
+  task_4: 20
 
 # Per-step wall-clock limit (seconds). Prevents the environment from
 # hanging indefinitely during costly diagnostic queries.

@@ -4,7 +4,7 @@ emoji: 🚀
 colorFrom: blue
 colorTo: green
 sdk: docker
-app_port: 8000
+app_port: 7860
 ---
 
 # 🚀 Agentic SRE OpenEnv: Production-Grade RL Environment for Incident Remediation
@@ -76,6 +76,7 @@ $$H_t = w_1 A_t + w_2\left(\frac{1}{L_t}\right) - w_3 B_t$$
 | **`task_1`** | **Gateway Latency Triage:** A simple spike in upstream latency requiring log inspection and a localized restart. | Easy | `0.8` – `1.2` |
 | **`task_2`** | **OOMKilled Loop:** A memory leak causing progressive pod evictions. Requires scaling or rollback mitigation. | Medium | `0.5` – `0.9` |
 | **`task_3`** | **DB Pool Exhaustion:** A cascading failure locking the PostgreSQL schema. Highly penalizes incorrect restarts. | Hard | `0.1` – `0.6` |
+| **`task_4`** | **Telemetry Collapse:** A memory leak in `logging-fluentd-sidecar` evicts `prometheus-server`, causing all metric queries to fail. | Hard | `0.1` – `0.6` |
 
 ---
 
@@ -126,7 +127,7 @@ pip install -r requirements.txt
 python rag/offline_index.py
 
 # 3. Spin up the Environment Server (Default OpenEnv HTTP/WS)
-uvicorn server.app:app --port 8000
+uvicorn server.app:app --port 7860
 
 # 4. Run the Baseline Assessment Runner
 python inference.py
